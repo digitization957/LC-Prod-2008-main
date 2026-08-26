@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS agency_logos (
+  agency_id INT PRIMARY KEY,
+  logo_path VARCHAR(255) NOT NULL,
+  uploaded_by VARCHAR(64),
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (agency_id) REFERENCES agencies(agency_id)
+);

@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\25011201\\Downloads\\LC-Prod-2008-main\\LC-Prod-2008-main\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1D222B0C-165A-4DB3-95AB-45E2EAFE05E8}|ComplianceV2.2\\ComplianceV2.2.csproj|c:\\users\\25011201\\downloads\\lc-prod-2008-main\\lc-prod-2008-main\\compliancev2.2\\scripts\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{1D222B0C-165A-4DB3-95AB-45E2EAFE05E8}|ComplianceV2.2\\ComplianceV2.2.csproj|solutionrelative:compliancev2.2\\scripts\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "app.js",
+              "DocumentMoniker": "C:\\Users\\25011201\\Downloads\\LC-Prod-2008-main\\LC-Prod-2008-main\\ComplianceV2.2\\Scripts\\app.js",
+              "RelativeDocumentMoniker": "ComplianceV2.2\\Scripts\\app.js",
+              "ToolTip": "C:\\Users\\25011201\\Downloads\\LC-Prod-2008-main\\LC-Prod-2008-main\\ComplianceV2.2\\Scripts\\app.js",
+              "RelativeToolTip": "ComplianceV2.2\\Scripts\\app.js",
+              "ViewState": "AgIAAJEBAAAAAAAAAAAawJ4BAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-30T09:41:32.169Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

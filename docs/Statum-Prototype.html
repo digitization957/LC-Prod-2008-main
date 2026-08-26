@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statum — Mahindra & Mahindra Ltd | Compliance Operations Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --paper:#F5F6F8;
+  --surface:#FFFFFF;
+  --surface-alt:#EEF1F5;
+  --ink:#161B22;
+  --ink-soft:#57616F;
+  --ink-faint:#8B93A1;
+  --navy-950:#0E1A2E;
+  --navy-800:#16273F;
+  --navy-700:#1E3654;
+  --navy-600:#28496E;
+  --navy-100:#E7ECF3;
+  --brass:#A9701F;
+  --brass-ink:#8A5B18;
+  --brass-soft:#F6ECD9;
+  --rust:#9C3B2E;
+  --rust-soft:#F5DFDB;
+  --moss:#2E6B4F;
+  --moss-soft:#DFEBE3;
+  --line:#E2E5EB;
+  --line-strong:#C9CFD9;
+  --shadow-sm: 0 1px 2px rgba(14,26,46,0.07);
+  --shadow-md: 0 4px 14px rgba(14,26,46,0.07), 0 1px 3px rgba(14,26,46,0.06);
+  --shadow-lg: 0 20px 48px rgba(14,26,46,0.18), 0 4px 12px rgba(14,26,46,0.08);
+  --shadow-hover: 0 10px 28px rgba(14,26,46,0.12), 0 2px 6px rgba(14,26,46,0.07);
+  --radius-sm:7px;
+  --radius-md:11px;
+  --radius-lg:16px;
+  --grad-navy: linear-gradient(180deg, #16273F 0%, #0E1A2E 100%);
+  --grad-navy-btn: linear-gradient(180deg, #223f63 0%, #16273F 100%);
+  --font-display:'Fraunces', Georgia, serif;
+  --font-body:'Public Sans', -apple-system, sans-serif;
+  --font-mono:'IBM Plex Mono', monospace;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0; color:var(--ink);
+  font-family:var(--font-body); font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  background-color:var(--paper);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(14,26,46,0.05) 1px, transparent 0);
+  background-size: 22px 22px;
+  background-attachment: fixed;
+}
+h1,h2,h3,h4{ font-family:var(--font-display); font-weight:600; margin:0; color:var(--navy-950); font-optical-sizing:auto; letter-spacing:-0.01em; }
+p{ margin:0; }
+a{ color:inherit; }
+button{ font-family:inherit; cursor:pointer; }
+input,select,textarea{ font-family:inherit; font-size:14px; }
+.mono{ font-family:var(--font-mono); }
+.muted{ color:var(--ink-soft); }
+.faint{ color:var(--ink-faint); }
+
+:focus-visible{ outline:2px solid var(--navy-600); outline-offset:2px; border-radius:4px; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+}
+
+/* ============ DEMO CONSOLE ============ */
+.demo-bar{
+  position:sticky; top:0; z-index:60;
+  background:var(--grad-navy); color:#CBD6E6;
+  padding:9px 22px; display:flex; align-items:center; gap:14px;
+  font-size:12.5px; box-shadow:0 1px 0 rgba(255,255,255,0.06) inset, 0 2px 8px rgba(14,26,46,0.25);
+}
+.demo-bar .tag{
+  font-family:var(--font-mono); letter-spacing:.08em; text-transform:uppercase;
+  font-size:10.5px; color:#8DA3C4; border:1px solid rgba(141,163,196,0.4);
+  padding:2px 7px; border-radius:4px; flex-shrink:0;
+}
+.role-switch{ display:flex; gap:4px; background:rgba(255,255,255,0.06); padding:3px; border-radius:8px; }
+.role-switch button{
+  border:none; background:transparent; color:#AFC0D6; padding:5px 12px;
+  border-radius:6px; font-size:12.5px; font-weight:500; transition:.15s;
+}
+.role-switch button.active{ background:var(--surface); color:var(--navy-950); }
+.role-switch button:hover:not(.active){ color:#fff; }
+.demo-bar .spacer{ flex:1; }
+.demo-bar .reset-btn{
+  background:transparent; border:1px solid rgba(255,255,255,0.18); color:#CBD6E6;
+  padding:5px 12px; border-radius:6px; font-size:12.5px;
+}
+.demo-bar .reset-btn:hover{ border-color:rgba(255,255,255,0.4); }
+.acting-as{ display:flex; align-items:center; gap:7px; font-size:12.5px; color:#8DA3C4; }
+.acting-as select{
+  background:var(--navy-800); color:#fff; border:1px solid rgba(255,255,255,0.15);
+  padding:4px 8px; border-radius:6px; font-size:12.5px;
+}
+
+/* ============ NAVBAR ============ */
+.navbar{
+  position:sticky; top:37px; z-index:50;
+  background:var(--surface); border-bottom:1px solid var(--line);
+  padding:14px 28px; display:flex; align-items:center; gap:20px;
+  box-shadow:0 2px 10px rgba(14,26,46,0.04);
+}
+.brand{ display:flex; align-items:center; gap:10px; }
+.brand-mark{
+  width:34px; height:34px; border-radius:9px; background:var(--grad-navy);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  box-shadow:0 2px 6px rgba(14,26,46,0.25);
+}
+.brand-mark svg{ width:18px; height:18px; }
+.brand-word{ font-family:var(--font-display); font-weight:600; font-size:19px; color:var(--navy-950); letter-spacing:-0.01em; }
+.org-logo{ height:22px; width:auto; object-fit:contain; }
+.org-logo-fallback{ display:none; font-family:var(--font-mono); font-weight:700; font-size:12px; letter-spacing:.04em; color:var(--rust); }
+.org-tag{
+  font-family:var(--font-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--ink-faint); border:1px solid var(--line-strong); border-radius:4px; padding:2px 6px;
+}
+@media (max-width:860px){ .org-logo, .org-tag{ display:none; } }
+.brand-divider{ width:1px; height:22px; background:var(--line-strong); margin:0 2px; }
+.section-label{ font-size:13px; color:var(--ink-soft); font-weight:500; }
+.nav-spacer{ flex:1; }
+.nav-actions{ display:flex; align-items:center; gap:10px; }
+
+.btn{
+  display:inline-flex; align-items:center; gap:7px; border-radius:8px;
+  font-size:13.5px; font-weight:600; padding:8px 15px; border:1px solid transparent;
+  transition:.18s cubic-bezier(.2,.8,.3,1); white-space:nowrap;
+}
+.btn svg{ width:15px; height:15px; }
+.btn-primary{ background:var(--grad-navy-btn); color:#fff; box-shadow:0 1px 2px rgba(14,26,46,0.15), 0 0 0 1px rgba(14,26,46,0.06); }
+.btn-primary:hover{ box-shadow:0 4px 12px rgba(14,26,46,0.28); transform:translateY(-1px); }
+.btn-primary:active{ transform:translateY(0); }
+.btn-outline{ background:var(--surface); color:var(--navy-950); border-color:var(--line-strong); }
+.btn-outline:hover{ background:var(--surface-alt); border-color:var(--navy-600); }
+.btn-ghost{ background:transparent; color:var(--ink-soft); font-weight:500; }
+.btn-ghost:hover{ background:var(--surface-alt); color:var(--ink); }
+.btn-sm{ padding:6px 12px; font-size:12.5px; }
+.btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+.icon-btn{
+  position:relative; width:36px; height:36px; border-radius:8px; border:1px solid var(--line-strong);
+  background:var(--surface); display:flex; align-items:center; justify-content:center; color:var(--navy-950);
+}
+.icon-btn:hover{ background:var(--surface-alt); }
+.icon-btn svg{ width:17px; height:17px; }
+.notif-dot{
+  position:absolute; top:-5px; right:-5px; min-width:17px; height:17px; border-radius:9px;
+  background:var(--rust); color:#fff; font-family:var(--font-mono); font-size:9.5px; font-weight:600;
+  display:flex; align-items:center; justify-content:center; padding:0 4px; border:2px solid var(--surface);
+}
+
+.user-chip{ display:flex; align-items:center; gap:9px; padding:4px 10px 4px 4px; border-radius:20px; border:1px solid var(--line); background:var(--surface); }
+.avatar{
+  width:28px; height:28px; border-radius:50%; background:var(--navy-100); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;
+  box-shadow:0 1px 2px rgba(14,26,46,0.2);
+}
+.user-chip .name{ font-size:12.5px; font-weight:600; line-height:1.2; }
+.user-chip .role{ font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; }
+
+/* ============ LAYOUT ============ */
+.container{ max-width:1180px; margin:0 auto; padding:36px 28px 80px; }
+.page-head{ margin-bottom:26px; }
+.eyebrow{ font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.1em; font-size:11.5px; color:var(--brass-ink); font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.eyebrow::before{ content:''; width:14px; height:2px; background:var(--brass); border-radius:2px; display:inline-block; }
+.page-head h1{ font-size:30px; margin-bottom:9px; line-height:1.15; }
+.page-head .desc{ color:var(--ink-soft); font-size:14.5px; max-width:640px; line-height:1.55; }
+
+.breadcrumb{ display:flex; align-items:center; gap:6px; font-size:13px; margin-bottom:20px; flex-wrap:wrap; }
+.breadcrumb .crumb{ color:var(--ink-soft); padding:4px 2px; border-radius:4px; }
+.breadcrumb .crumb.clickable{ cursor:pointer; color:var(--navy-700); font-weight:500; }
+.breadcrumb .crumb.clickable:hover{ text-decoration:underline; }
+.breadcrumb .crumb.current{ color:var(--ink); font-weight:600; }
+.breadcrumb svg{ width:13px; height:13px; color:var(--ink-faint); }
+
+/* ============ GRIDS & CARDS ============ */
+.grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(270px,1fr)); gap:16px; }
+
+@keyframes riseIn{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:translateY(0);} }
+.grid .entity-card{ animation:riseIn .4s cubic-bezier(.2,.8,.3,1) backwards; }
+.grid .entity-card:nth-child(1){ animation-delay:.01s; }
+.grid .entity-card:nth-child(2){ animation-delay:.05s; }
+.grid .entity-card:nth-child(3){ animation-delay:.09s; }
+.grid .entity-card:nth-child(4){ animation-delay:.13s; }
+.grid .entity-card:nth-child(5){ animation-delay:.17s; }
+.grid .entity-card:nth-child(n+6){ animation-delay:.2s; }
+.compliance-row{ animation:riseIn .35s cubic-bezier(.2,.8,.3,1) backwards; }
+.compliance-row:nth-child(1){ animation-delay:.01s; }
+.compliance-row:nth-child(2){ animation-delay:.04s; }
+.compliance-row:nth-child(3){ animation-delay:.07s; }
+.compliance-row:nth-child(4){ animation-delay:.1s; }
+.compliance-row:nth-child(n+5){ animation-delay:.12s; }
+
+.entity-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg);
+  padding:20px; cursor:pointer; transition:.2s cubic-bezier(.2,.8,.3,1); text-align:left; display:flex; flex-direction:column; gap:14px;
+  position:relative; overflow:hidden; box-shadow:var(--shadow-sm);
+}
+.entity-card:hover{ box-shadow:var(--shadow-hover); transform:translateY(-3px); border-color:var(--line-strong); }
+.entity-card:active{ transform:translateY(-1px); }
+.entity-card .icon-wrap{
+  width:42px; height:42px; border-radius:10px; background:var(--navy-100); color:var(--navy-700);
+  display:flex; align-items:center; justify-content:center;
+}
+.entity-card .icon-wrap svg{ width:20px; height:20px; }
+.entity-card h3{ font-size:17px; line-height:1.3; }
+.entity-card .meta{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+.entity-card .code{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); letter-spacing:.03em; margin-top:3px; }
+.entity-card .stat-row{ display:flex; gap:14px; padding-top:10px; border-top:1px solid var(--line); margin-top:auto; }
+.mini-stat{ display:flex; align-items:center; gap:5px; font-size:12px; font-weight:600; }
+.mini-stat .dot{ width:7px; height:7px; border-radius:50%; }
+.dot.overdue{ background:var(--rust); }
+.dot.due{ background:var(--brass); }
+.dot.compliant{ background:var(--moss); }
+.entity-card .chevron{ position:absolute; top:20px; right:18px; color:var(--ink-faint); }
+.entity-card .chevron svg{ width:16px; height:16px; }
+
+.entity-card.locked{
+  cursor:not-allowed; background:var(--surface-alt); border-style:dashed; border-color:var(--line-strong);
+}
+.entity-card.locked:hover{ transform:none; box-shadow:none; }
+.entity-card.locked .icon-wrap{ background:var(--line); color:var(--ink-faint); }
+.entity-card.locked h3{ color:var(--ink-soft); }
+.lock-note{
+  display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-faint); font-weight:500;
+  padding-top:10px; border-top:1px solid var(--line); margin-top:auto;
+}
+.lock-note svg{ width:13px; height:13px; }
+
+/* ============ STATUS: PILL + STAMP ============ */
+.status-pill{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:20px;
+  font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.03em; font-family:var(--font-mono);
+}
+.status-pill .dot{ width:6px; height:6px; border-radius:50%; }
+.status-pill.overdue{ background:var(--rust-soft); color:var(--rust); }
+.status-pill.due{ background:var(--brass-soft); color:var(--brass-ink); }
+.status-pill.compliant{ background:var(--moss-soft); color:var(--moss); }
+
+.stamp{
+  width:92px; height:92px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  border:2.5px solid currentColor; position:relative; transform:rotate(-7deg);
+  font-family:var(--font-mono); font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+  font-size:11px; line-height:1.25; padding:8px; filter:drop-shadow(0 3px 6px rgba(14,26,46,0.1));
+}
+.stamp::after{ content:''; position:absolute; inset:5px; border:1px solid currentColor; border-radius:50%; opacity:.45; }
+.stamp span{ position:relative; z-index:1; }
+.stamp.overdue{ color:var(--rust); }
+.stamp.due{ color:var(--brass-ink); }
+.stamp.compliant{ color:var(--moss); }
+
+/* ============ COMPLIANCE LIST ============ */
+.list-toolbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
+.fy-filter{ display:flex; align-items:center; gap:8px; }
+.fy-filter label{ font-size:12.5px; color:var(--ink-soft); font-weight:500; }
+.fy-filter select{ border:1px solid var(--line-strong); border-radius:7px; padding:7px 10px; background:var(--surface); color:var(--ink); font-size:13px; }
+.result-count{ font-size:12.5px; color:var(--ink-faint); }
+
+.compliance-row{
+  background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--line-strong); border-radius:var(--radius-md);
+  padding:16px 18px; display:flex; align-items:center; gap:18px; margin-bottom:10px; cursor:pointer; transition:.18s cubic-bezier(.2,.8,.3,1);
+}
+.compliance-row:hover{ border-color:var(--line-strong); box-shadow:var(--shadow-hover); transform:translateY(-1px); }
+.compliance-row.overdue{ border-left-color:var(--rust); }
+.compliance-row.due{ border-left-color:var(--brass); }
+.compliance-row.compliant{ border-left-color:var(--moss); }
+.compliance-row.locked{
+  cursor:not-allowed; background:var(--surface-alt); border-style:dashed; border-left-style:solid; border-left-color:var(--line-strong);
+}
+.compliance-row.locked:hover{ transform:none; box-shadow:none; }
+.compliance-row.locked h4{ color:var(--ink-soft); }
+.compliance-row.locked .cr-due{ opacity:.6; }
+.compliance-row.flash{ animation:flashRow 1.6s ease; }
+@keyframes flashRow{ 0%{ background:var(--brass-soft);} 100%{ background:var(--surface);} }
+.cr-main{ flex:1; min-width:0; }
+.cr-main h4{ font-size:14.5px; font-weight:600; margin-bottom:4px; }
+.cr-meta{ display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); }
+.cr-meta span{ display:flex; align-items:center; gap:4px; }
+.cr-meta svg{ width:12.5px; height:12.5px; }
+.cr-due{ text-align:right; flex-shrink:0; }
+.cr-due .date{ font-family:var(--font-mono); font-size:13px; font-weight:600; }
+.cr-due .label{ font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; }
+
+.empty-state{
+  text-align:center; padding:56px 20px; background:var(--surface); border:1px dashed var(--line-strong); border-radius:var(--radius-lg);
+}
+.empty-state .icon-wrap{ width:48px; height:48px; border-radius:12px; background:var(--surface-alt); color:var(--ink-faint); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; }
+.empty-state .icon-wrap svg{ width:22px; height:22px; }
+.empty-state h3{ font-size:15.5px; margin-bottom:6px; }
+.empty-state p{ font-size:13px; color:var(--ink-soft); max-width:360px; margin:0 auto; }
+
+/* ============ DETAIL PANEL ============ */
+.detail-panel{ animation:fadeIn .2s ease; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+.detail-head{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); padding:26px;
+  display:flex; gap:24px; margin-bottom:20px; box-shadow:var(--shadow-sm);
+}
+.detail-head .info{ flex:1; }
+.detail-head .view-only-tag{
+  display:inline-flex; align-items:center; gap:6px; background:var(--surface-alt); color:var(--ink-soft);
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:4px 9px; border-radius:5px; margin-bottom:10px;
+}
+.detail-head .view-only-tag svg{ width:12px; height:12px; }
+.detail-head h2{ font-size:21px; margin-bottom:10px; }
+.detail-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; margin-top:16px; }
+.dg-item .k{ font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-faint); margin-bottom:4px; font-weight:600; }
+.dg-item .v{ font-size:13.5px; font-weight:500; }
+.dg-item .v.mono{ font-size:13px; }
+
+.two-col{ display:grid; grid-template-columns:1.1fr 1.5fr; gap:20px; align-items:start; }
+@media (max-width:860px){ .two-col{ grid-template-columns:1fr; } .detail-head{ flex-direction:column; } }
+
+.panel{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow-sm); }
+.panel h3{ font-size:15.5px; margin-bottom:16px; display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:600; }
+.panel h3 svg{ width:16px; height:16px; color:var(--navy-700); }
+
+.field{ margin-bottom:16px; }
+.field label{ display:block; font-size:12.5px; font-weight:600; margin-bottom:6px; color:var(--ink); }
+.field .hint{ font-size:11.5px; color:var(--ink-faint); margin-top:4px; }
+.input,.select,.textarea{
+  width:100%; border:1px solid var(--line-strong); border-radius:8px; padding:9px 11px; background:var(--surface); color:var(--ink);
+  transition:.15s;
+}
+.textarea{ resize:vertical; min-height:70px; }
+.input:focus,.select:focus,.textarea:focus{ border-color:var(--navy-600); box-shadow:0 0 0 3px rgba(30,54,84,0.1); outline:none; }
+.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+.reminder-chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+.reminder-chip{
+  display:flex; align-items:center; gap:6px; background:var(--surface-alt); border:1px solid var(--line);
+  border-radius:7px; padding:6px 10px; font-size:12px;
+}
+.reminder-chip b{ font-family:var(--font-mono); color:var(--navy-700); }
+.reminder-chip input{ width:38px; border:none; background:transparent; font-family:var(--font-mono); font-weight:600; text-align:center; color:var(--navy-700); }
+
+.attach-list{ display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+.attach-chip{ display:flex; align-items:center; gap:6px; background:var(--surface-alt); border:1px solid var(--line); border-radius:6px; padding:5px 9px; font-size:12px; }
+.attach-chip svg{ width:13px; height:13px; color:var(--ink-soft); }
+.attach-chip button{ border:none; background:none; color:var(--ink-faint); display:flex; }
+.attach-chip button:hover{ color:var(--rust); }
+
+.history-item{ display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); }
+.history-item:last-child{ border-bottom:none; }
+.history-dot{ width:9px; height:9px; border-radius:50%; background:var(--moss); margin-top:6px; flex-shrink:0; }
+.history-item .h-date{ font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:var(--navy-700); min-width:92px; }
+.history-item .h-body{ flex:1; }
+.history-item .h-remarks{ font-size:13px; margin:3px 0 6px; }
+.history-item .h-by{ font-size:11.5px; color:var(--ink-faint); }
+.history-item .h-files{ display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+.file-chip{ display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--navy-700); background:var(--navy-100); padding:3px 8px; border-radius:5px; }
+.file-chip svg{ width:11px; height:11px; }
+
+.back-link{ display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:500; color:var(--navy-700); margin-bottom:16px; }
+.back-link:hover{ text-decoration:underline; }
+.back-link svg{ width:15px; height:15px; }
+
+/* ============ MODAL ============ */
+.overlay{ position:fixed; inset:0; background:rgba(14,26,46,0.45); display:flex; align-items:flex-start; justify-content:center; padding:48px 20px; z-index:100; overflow-y:auto; animation:fadeIn .15s ease; }
+.overlay.hidden{ display:none; }
+.modal{ background:var(--surface); border-radius:var(--radius-lg); width:100%; max-width:560px; box-shadow:var(--shadow-lg); animation:modalIn .18s ease; }
+@keyframes modalIn{ from{ opacity:0; transform:translateY(-10px) scale(.98);} to{ opacity:1; transform:translateY(0) scale(1);} }
+.modal-head{ display:flex; align-items:center; justify-content:space-between; padding:20px 22px; border-bottom:1px solid var(--line); }
+.modal-head h3{ font-size:18px; }
+.modal-head p{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; }
+.modal-head-inner{ display:flex; gap:13px; align-items:flex-start; }
+.modal-head-icon{ width:38px; height:38px; border-radius:10px; background:var(--navy-100); color:var(--navy-700); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.modal-head-icon svg{ width:18px; height:18px; }
+.modal-section-label{
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint);
+  margin:20px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line);
+}
+.modal-section-label:first-child{ margin-top:0; }
+.modal-close{ border:none; background:var(--surface-alt); width:30px; height:30px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:var(--ink-soft); }
+.modal-close:hover{ background:var(--line); color:var(--ink); }
+.modal-close svg{ width:15px; height:15px; }
+.modal-body{ padding:22px; max-height:60vh; overflow-y:auto; }
+.modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:16px 22px; border-top:1px solid var(--line); }
+.preview-box{ background:var(--navy-100); border:1px solid var(--navy-600); border-radius:8px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; margin-top:4px; }
+.preview-box .k{ font-size:11.5px; color:var(--navy-700); font-weight:600; text-transform:uppercase; letter-spacing:.03em; }
+.preview-box .v{ font-family:var(--font-mono); font-weight:700; color:var(--navy-950); font-size:14px; }
+
+/* ============ NOTIFICATION PANEL ============ */
+.notif-panel{
+  position:absolute; top:56px; right:28px; width:360px; background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); z-index:70; animation:fadeIn .15s ease;
+}
+.notif-panel.hidden{ display:none; }
+.notif-panel-head{ padding:16px 18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+.notif-panel-head h4{ font-size:14.5px; }
+.notif-panel-head span{ font-size:11.5px; color:var(--ink-soft); }
+.notif-list{ max-height:360px; overflow-y:auto; }
+.notif-section-label{
+  font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:10px 18px 6px;
+  background:var(--surface-alt);
+}
+.notif-section-label.overdue{ color:var(--rust); }
+.notif-section-label.due{ color:var(--brass-ink); }
+.notif-item{ padding:13px 18px; border-bottom:1px solid var(--line); cursor:pointer; display:flex; gap:11px; }
+.notif-item:hover{ background:var(--surface-alt); }
+.notif-item:last-child{ border-bottom:none; }
+.notif-item .n-icon{ width:30px; height:30px; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.notif-item .n-icon svg{ width:15px; height:15px; }
+.notif-item .n-icon.overdue{ background:var(--rust-soft); color:var(--rust); }
+.notif-item .n-icon.due{ background:var(--brass-soft); color:var(--brass-ink); }
+.notif-item .n-title{ font-size:13px; font-weight:600; margin-bottom:2px; }
+.notif-item .n-sub{ font-size:11.5px; color:var(--ink-soft); }
+
+/* ============ TOAST ============ */
+.toast-wrap{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:200; display:flex; flex-direction:column; gap:8px; align-items:center; }
+.toast{
+  background:var(--navy-950); color:#fff; padding:11px 20px; border-radius:8px; font-size:13px; font-weight:500;
+  display:flex; align-items:center; gap:9px; box-shadow:var(--shadow-lg); animation:toastIn .2s ease;
+}
+.toast svg{ width:15px; height:15px; color:var(--moss); flex-shrink:0; }
+@keyframes toastIn{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:translateY(0);} }
+
+/* ============ MISC ============ */
+.section-divider{ height:1px; background:var(--line); margin:28px 0; }
+.footnote{ text-align:center; font-size:12px; color:var(--ink-faint); margin-top:48px; }
+::selection{ background:var(--navy-100); }
+@media (max-width:720px){
+  .navbar{ flex-wrap:wrap; padding:12px 16px; }
+  .container{ padding:24px 16px 60px; }
+  .demo-bar{ flex-wrap:wrap; padding:8px 14px; }
+  .field-row{ grid-template-columns:1fr; }
+  .detail-grid{ grid-template-columns:repeat(2,1fr); }
+  .notif-panel{ right:10px; width:calc(100vw - 20px); }
+}
+</style>
+</head>
+<body>
+
+<!-- DEMO CONSOLE -->
+<div class="demo-bar">
+  <span class="tag">Prototype</span>
+  <div class="role-switch" id="roleSwitch">
+    <button data-role="master">Master</button>
+    <button data-role="owner">Owner</button>
+    <button data-role="reviewer">Reviewer</button>
+  </div>
+  <div class="acting-as" id="actingAsWrap" style="display:none;">
+    <span id="actingAsLabel">Viewing as</span>
+    <select id="actingAsSelect"></select>
+  </div>
+  <div class="spacer"></div>
+  <button class="reset-btn" id="resetDemo">Reset demo</button>
+</div>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6l-9-4Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+    </div>
+    <span class="brand-word">Statum</span>
+  </div>
+  <div class="brand-divider"></div>
+  <img src="https://www.mahindra.com//sites/default/files/2025-07/mahindra-red-logo.webp" alt="Mahindra & Mahindra Ltd" class="org-logo" onerror="this.style.display='none'; document.getElementById('orgFallback').style.display='inline';" />
+  <span class="org-logo-fallback" id="orgFallback">MAHINDRA &amp; MAHINDRA</span>
+  <span class="org-tag">Internal</span>
+  <div class="brand-divider"></div>
+  <span class="section-label" id="sectionLabel">MasterView</span>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions" id="navActions"></div>
+</header>
+
+<div id="notifPanel" class="notif-panel hidden"></div>
+
+<!-- MAIN -->
+<main class="container" id="viewRoot"></main>
+
+<div class="footnote">Internal prototype for Mahindra & Mahindra Ltd · All names, plants and filings are illustrative sample data</div>
+
+<!-- MODALS -->
+<div class="overlay hidden" id="agencyModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-head-inner">
+        <div class="modal-head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z"/></svg></div>
+        <div><h3>Create agency</h3><p>Add a new regulatory agency under a plant</p></div>
+      </div>
+      <button class="modal-close" id="closeAgencyModal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Plant</label>
+        <select class="select" id="agencyPlantSelect"></select>
+      </div>
+      <div class="field">
+        <label>Agency name</label>
+        <input class="input" id="agencyNameInput" placeholder="e.g. Pollution Control Board" />
+      </div>
+      <div class="field">
+        <label>Description <span class="faint">(optional)</span></label>
+        <textarea class="textarea" id="agencyDescInput" placeholder="What this agency oversees"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="cancelAgencyModal">Cancel</button>
+      <button class="btn btn-primary" id="submitAgencyModal">Create agency</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="complianceModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-head-inner">
+        <div class="modal-head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg></div>
+        <div><h3 id="complianceModalTitle">Create compliance</h3><p>Define a recurring filing and assign it to an owner</p></div>
+      </div>
+      <button class="modal-close" id="closeComplianceModal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-label">Location</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Plant</label>
+          <select class="select" id="cPlantSelect"></select>
+        </div>
+        <div class="field">
+          <label>Agency</label>
+          <select class="select" id="cAgencySelect"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Compliance name</label>
+        <input class="input" id="cNameInput" placeholder="e.g. Factory License Renewal" />
+      </div>
+      <div class="modal-section-label">Assignment</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Owner</label>
+          <select class="select" id="cOwnerSelect"></select>
+        </div>
+        <div class="field">
+          <label>Reviewer</label>
+          <select class="select" id="cReviewerSelect"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Department</label>
+        <select class="select" id="cDeptSelect">
+          <option>Environment</option><option>Human Resources</option><option>Safety</option>
+          <option>Engineering</option><option>Finance</option><option>Safety &amp; Operations</option>
+        </select>
+      </div>
+      <div class="modal-section-label">Schedule</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Start date</label>
+          <input class="input" type="date" id="cStartInput" />
+        </div>
+        <div class="field">
+          <label>Frequency</label>
+          <div style="display:flex; gap:8px;">
+            <input class="input" type="number" min="1" value="1" id="cFreqNumInput" style="width:70px;" />
+            <select class="select" id="cFreqUnitInput">
+              <option value="day">Day(s)</option><option value="week">Week(s)</option>
+              <option value="month" selected>Month(s)</option><option value="year">Year(s)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Next due date <span class="faint">(auto-calculated)</span></label>
+        <div class="preview-box"><span class="k">Next due</span><span class="v" id="cDuePreview">—</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="cancelComplianceModal">Cancel</button>
+      <button class="btn btn-primary" id="submitComplianceModal">Create compliance</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ================= ICONS ================= */
+const ICON = {
+  bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  chevronRight:'<polyline points="9 18 15 12 9 6"/>',
+  chevronLeft:'<polyline points="15 18 9 12 15 6"/>',
+  x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  checkCircle:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+  alertTriangle:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  paperclip:'<path d="M21.44 11.05 12.25 20.24a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95L9.64 18.36a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',
+  folder:'<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z"/>',
+  building:'<rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="7" x2="9" y2="7.01"/><line x1="15" y1="7" x2="15" y2="7.01"/><line x1="9" y1="11" x2="9" y2="11.01"/><line x1="15" y1="11" x2="15" y2="11.01"/><line x1="9" y1="15" x2="9" y2="15.01"/><line x1="15" y1="15" x2="15" y2="15.01"/>',
+  eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>',
+  arrowLeft:'<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
+  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+  edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/>',
+  fileText:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>',
+  calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'
+};
+function icon(name, size){ size = size || 16; return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="'+size+'" height="'+size+'">'+ICON[name]+'</svg>'; }
+
+/* ================= DATA ================= */
+const TODAY = new Date('2026-07-16');
+
+const USERS = {
+  master: { id:'u-master', name:'Ananya Rao', title:'Compliance Head', initials:'AR' },
+  owners: [
+    {id:'v1', name:'Vikram Nair', dept:'Environment Cell', initials:'VN'},
+    {id:'v2', name:'Meera Iyer', dept:'HR & Labour Welfare', initials:'MI'},
+    {id:'v3', name:'Rohan Deshmukh', dept:'Safety & Fire', initials:'RD'},
+    {id:'v4', name:'Sana Sheikh', dept:'Finance & Tax', initials:'SS'},
+    {id:'v5', name:'Arjun Bhatt', dept:'Electrical Engineering', initials:'AB'}
+  ],
+  reviewers: [
+    {id:'r1', name:'Kavita Menon', title:'Regional Compliance Lead', initials:'KM'},
+    {id:'r2', name:'Suresh Pillai', title:'Internal Audit', initials:'SP'},
+    {id:'r3', name:'Devika Krishnan', title:'Plant Compliance Auditor', initials:'DK'}
+  ]
+};
+function findUser(id){
+  if(id==='u-master') return USERS.master;
+  return USERS.owners.find(u=>u.id===id) || USERS.reviewers.find(u=>u.id===id) || {name:'Unassigned', initials:'—'};
+}
+
+const PLANTS = [
+  {id:'p1', name:'Chennai Auto Components Plant', code:'CH-01', location:'Sriperumbudur, Tamil Nadu'},
+  {id:'p2', name:'Pune Precision Manufacturing', code:'PU-02', location:'Chakan, Maharashtra'},
+  {id:'p3', name:'Vizag Process & Refinery Unit', code:'VZ-03', location:'Visakhapatnam, Andhra Pradesh'},
+  {id:'p4', name:'Noida Electronics Assembly', code:'ND-04', location:'Noida, Uttar Pradesh'}
+];
+
+const AGENCY_META = {
+  pcb:{name:'Pollution Control Board', dept:'Environment'},
+  fire:{name:'Fire & Safety Directorate', dept:'Safety'},
+  labour:{name:'Labour Welfare Department', dept:'Human Resources'},
+  factories:{name:'Factories Inspectorate', dept:'Safety & Operations'},
+  electrical:{name:'Electrical Inspectorate', dept:'Engineering'},
+  gst:{name:'Commercial Tax / GST Dept.', dept:'Finance'}
+};
+const AGENCIES = [
+  {id:'p1-pcb', plantId:'p1', type:'pcb'}, {id:'p1-fire', plantId:'p1', type:'fire'},
+  {id:'p1-labour', plantId:'p1', type:'labour'}, {id:'p1-factories', plantId:'p1', type:'factories'},
+  {id:'p2-pcb', plantId:'p2', type:'pcb'}, {id:'p2-labour', plantId:'p2', type:'labour'},
+  {id:'p2-electrical', plantId:'p2', type:'electrical'}, {id:'p2-gst', plantId:'p2', type:'gst'},
+  {id:'p3-pcb', plantId:'p3', type:'pcb'}, {id:'p3-fire', plantId:'p3', type:'fire'},
+  {id:'p3-factories', plantId:'p3', type:'factories'}, {id:'p3-gst', plantId:'p3', type:'gst'},
+  {id:'p4-labour', plantId:'p4', type:'labour'}, {id:'p4-electrical', plantId:'p4', type:'electrical'},
+  {id:'p4-fire', plantId:'p4', type:'fire'}, {id:'p4-pcb', plantId:'p4', type:'pcb'}
+].map(a=>({...a, name:AGENCY_META[a.type].name, dept:AGENCY_META[a.type].dept}));
+
+let COMPLIANCES = [
+  mkC('c1','p1-pcb','Consent to Operate Renewal','v1','r1','2025-08-10',1,'year',[
+    {date:'2025-08-10', by:'v1', remarks:'Renewed with State Pollution Control Board. Certificate valid till Aug 2026.', files:['consent_certificate_2025.pdf']}]),
+  mkC('c2','p1-pcb','Hazardous Waste Authorization','v1','r1','2025-07-05',1,'year',[
+    {date:'2025-07-05', by:'v1', remarks:'Authorization renewed for FY2025-26.', files:['hw_authorization_2025.pdf']}]),
+  mkC('c3','p1-fire','Fire NOC Renewal','v3','r1','2025-07-22',1,'year',[
+    {date:'2025-07-22', by:'v3', remarks:'NOC issued after site inspection.', files:['fire_noc_2025.pdf']}]),
+  mkC('c4','p1-labour','PF Monthly Return','v2','r2','2026-06-25',1,'month',[
+    {date:'2026-06-25', by:'v2', remarks:'June return filed via EPFO portal.', files:['pf_return_jun26.pdf']}]),
+  mkC('c5','p1-factories','Factory License Renewal','v3','r3','2025-12-01',1,'year',[
+    {date:'2025-12-01', by:'v3', remarks:'License renewed for CY2026.', files:['factory_license_2026.pdf']}]),
+
+  mkC('c6','p2-pcb','Effluent Discharge Report','v1','r1','2026-04-18',3,'month',[
+    {date:'2026-04-18', by:'v1', remarks:'Q1 discharge report submitted.', files:['effluent_q1_2026.pdf']}]),
+  mkC('c7','p2-labour','ESI Monthly Contribution','v2','r2','2026-05-15',1,'month',[
+    {date:'2026-05-15', by:'v2', remarks:'May contribution deposited.', files:['esi_may26.pdf']}]),
+  mkC('c8','p2-labour','Contract Labour License Renewal','v2','r2','2026-02-01',1,'year',[
+    {date:'2026-02-01', by:'v2', remarks:'License renewed for 2026-27.', files:['cl_license_2026.pdf']}]),
+  mkC('c9','p2-electrical','Electrical Installation Inspection','v5','r3','2025-07-10',1,'year',[
+    {date:'2025-07-10', by:'v5', remarks:'Annual inspection completed, minor remarks closed.', files:['electrical_inspection_2025.pdf']}]),
+  mkC('c10','p2-gst','GST Annual Return Filing','v4','r2','2025-09-30',1,'year',[
+    {date:'2025-09-30', by:'v4', remarks:'GSTR-9 filed for FY2024-25.', files:['gstr9_fy2425.pdf']}]),
+
+  mkC('c11','p3-pcb','Consent to Operate Renewal','v1','r1','2025-07-31',1,'year',[
+    {date:'2025-07-31', by:'v1', remarks:'Renewed pending final stack emission test.', files:['consent_vzg_2025.pdf']}]),
+  mkC('c12','p3-fire','Fire Extinguisher Inspection','v3','r1','2026-01-02',6,'month',[
+    {date:'2026-01-02', by:'v3', remarks:'H1 inspection completed, 4 units refilled.', files:['fire_ext_h1_2026.pdf']}]),
+  mkC('c13','p3-factories','Factory License Renewal','v3','r3','2025-11-20',1,'year',[
+    {date:'2025-11-20', by:'v3', remarks:'License renewed for CY2026.', files:['factory_license_vzg_2026.pdf']}]),
+  mkC('c14','p3-gst','Professional Tax Payment','v4','r2','2026-06-30',1,'month',[
+    {date:'2026-06-30', by:'v4', remarks:'June PT payment made.', files:['pt_jun26.pdf']}]),
+
+  mkC('c15','p4-labour','PF Monthly Return','v2','r2','2026-07-05',1,'month',[
+    {date:'2026-07-05', by:'v2', remarks:'July return filed ahead of schedule.', files:['pf_return_jul26.pdf']}]),
+  mkC('c16','p4-electrical','Electrical Installation Inspection','v5','r3','2025-06-28',1,'year',[
+    {date:'2025-06-28', by:'v5', remarks:'Annual inspection completed.', files:['electrical_noida_2025.pdf']}]),
+  mkC('c17','p4-fire','Fire NOC Renewal','v3','r1','2025-07-28',1,'year',[
+    {date:'2025-07-28', by:'v3', remarks:'NOC renewed after hydrant test.', files:['fire_noc_noida_2025.pdf']}]),
+  mkC('c18','p4-pcb','Hazardous Waste Authorization','v1','r1','2026-01-10',1,'year',[
+    {date:'2026-01-10', by:'v1', remarks:'Authorization renewed for 2026-27.', files:['hw_authorization_noida_2026.pdf']}]),
+  mkC('c19','p1-pcb','Annual Environmental Audit','v3','r1','2026-03-01',1,'year',[
+    {date:'2026-03-01', by:'v3', remarks:'Third-party audit completed, no major findings.', files:['env_audit_2026.pdf']}])
+];
+
+function mkC(id, agencyId, name, ownerId, reviewerId, startDate, freqNum, freqUnit, logs){
+  const agency = AGENCIES.find(a=>a.id===agencyId);
+  const start = new Date(startDate);
+  const nextDue = addInterval(start, freqNum, freqUnit);
+  return {
+    id, agencyId, plantId: agency.plantId, name, ownerId, reviewerId, department: agency.dept,
+    startDate, freqNum, freqUnit, nextDue: isoDate(nextDue),
+    reminders:[{label:'R1',days:30},{label:'R2',days:15},{label:'R3',days:7},{label:'R4',days:1}],
+    logs: logs || []
+  };
+}
+function addInterval(date, num, unit){
+  const d = new Date(date);
+  if(unit==='day') d.setDate(d.getDate()+num);
+  if(unit==='week') d.setDate(d.getDate()+num*7);
+  if(unit==='month') d.setMonth(d.getMonth()+num);
+  if(unit==='year') d.setFullYear(d.getFullYear()+num);
+  return d;
+}
+function isoDate(d){ return d.toISOString().slice(0,10); }
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-IN',{day:'2-digit', month:'short', year:'numeric'});
+}
+const AVATAR_GRADIENTS = [
+  'linear-gradient(135deg,#1E3654,#0E1A2E)',
+  'linear-gradient(135deg,#A9701F,#7A5316)',
+  'linear-gradient(135deg,#2E6B4F,#1F4A37)',
+  'linear-gradient(135deg,#9C3B2E,#6E2A20)',
+  'linear-gradient(135deg,#28496E,#152B45)'
+];
+function avatarGradient(name){
+  let h = 0; for(let i=0;i<name.length;i++) h = (h*31 + name.charCodeAt(i)) % AVATAR_GRADIENTS.length;
+  return AVATAR_GRADIENTS[Math.abs(h)];
+}
+function fyOf(iso){
+  const d = new Date(iso);
+  const y = d.getFullYear(), m = d.getMonth()+1;
+  if(m>=4) return 'FY '+y+'-'+String(y+1).slice(2);
+  return 'FY '+(y-1)+'-'+String(y).slice(2);
+}
+function computeStatus(nextDueIso){
+  const due = new Date(nextDueIso);
+  if(due < TODAY) return 'overdue';
+  if(due.getFullYear()===TODAY.getFullYear() && due.getMonth()===TODAY.getMonth()) return 'due';
+  return 'compliant';
+}
+function statusLabel(s){ return s==='overdue' ? 'Overdue' : s==='due' ? 'Due this month' : 'Compliant'; }
+
+/* ================= STATE ================= */
+const state = {
+  role:'master',
+  actingUserId: USERS.owners[0].id,
+  plantId:null,
+  agencyId:null,
+  complianceId:null,
+  fy:'all',
+  tempAttachments:[],
+  editingComplianceId:null
+};
+
+function resetNav(){ state.plantId=null; state.agencyId=null; state.complianceId=null; state.fy='all'; }
+
+/* ================= SCOPING ================= */
+function scopedComplianceIds(){
+  if(state.role==='master') return COMPLIANCES.map(c=>c.id);
+  if(state.role==='owner') return COMPLIANCES.filter(c=>c.ownerId===state.actingUserId).map(c=>c.id);
+  return COMPLIANCES.filter(c=>c.reviewerId===state.actingUserId).map(c=>c.id);
+}
+function isPlantAccessible(plantId){
+  if(state.role==='master') return true;
+  const ids = scopedComplianceIds();
+  return COMPLIANCES.some(c=>ids.includes(c.id) && c.plantId===plantId);
+}
+function isAgencyAccessible(agencyId){
+  if(state.role==='master') return true;
+  const ids = scopedComplianceIds();
+  return COMPLIANCES.some(c=>ids.includes(c.id) && c.agencyId===agencyId);
+}
+function isComplianceAccessible(complianceId){
+  if(state.role==='master') return true;
+  return scopedComplianceIds().includes(complianceId);
+}
+function plantStats(plantId){
+  const list = COMPLIANCES.filter(c=>c.plantId===plantId && scopedComplianceIds().includes(c.id));
+  return statBreakdown(list);
+}
+function agencyStats(agencyId){
+  const list = COMPLIANCES.filter(c=>c.agencyId===agencyId && scopedComplianceIds().includes(c.id));
+  return statBreakdown(list);
+}
+function statBreakdown(list){
+  const out = {overdue:0, due:0, compliant:0};
+  list.forEach(c=> out[computeStatus(c.nextDue)]++ );
+  return out;
+}
+function notifCounts(scopeIds){
+  const list = COMPLIANCES.filter(c=>scopeIds.includes(c.id));
+  return { overdue: list.filter(c=>computeStatus(c.nextDue)==='overdue').length, due: list.filter(c=>computeStatus(c.nextDue)==='due').length };
+}
+
+/* ================= RENDER: SHELL ================= */
+function render(){
+  renderDemoBar();
+  renderNavbar();
+  renderNotifPanel();
+  const root = document.getElementById('viewRoot');
+  if(state.role==='master') root.innerHTML = renderMasterView();
+  else if(state.role==='owner') root.innerHTML = renderOwnerView();
+  else root.innerHTML = renderReviewerView();
+  attachHandlers();
+}
+
+function renderDemoBar(){
+  document.querySelectorAll('#roleSwitch button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.role===state.role);
+  });
+  const wrap = document.getElementById('actingAsWrap');
+  const label = document.getElementById('actingAsLabel');
+  const select = document.getElementById('actingAsSelect');
+  if(state.role==='master'){ wrap.style.display='none'; return; }
+  wrap.style.display='flex';
+  label.textContent = state.role==='owner' ? 'Viewing as owner' : 'Viewing as reviewer';
+  const list = state.role==='owner' ? USERS.owners : USERS.reviewers;
+  select.innerHTML = list.map(u=>'<option value="'+u.id+'"'+(u.id===state.actingUserId?' selected':'')+'>'+u.name+'</option>').join('');
+}
+
+function renderNavbar(){
+  document.getElementById('sectionLabel').textContent =
+    state.role==='master' ? 'MasterView' : state.role==='owner' ? 'Compliances' : 'Compliances · Reviewer';
+
+  const actions = document.getElementById('navActions');
+  let html = '';
+  if(state.role==='master'){
+    html += '<button class="btn btn-outline btn-sm" id="btnNewAgency">'+icon('plus',14)+' Create agency</button>';
+    html += '<button class="btn btn-primary btn-sm" id="btnNewCompliance">'+icon('plus',14)+' Create compliance</button>';
+  }
+  if(state.role==='master' || state.role==='owner'){
+    const scopeIds = state.role==='master' ? COMPLIANCES.map(c=>c.id) : COMPLIANCES.filter(c=>c.ownerId===state.actingUserId).map(c=>c.id);
+    const counts = notifCounts(scopeIds);
+    const total = counts.overdue + counts.due;
+    html += '<button class="icon-btn" id="btnNotif">'+icon('bell',17)+ (total>0 ? '<span class="notif-dot">'+total+'</span>' : '') +'</button>';
+  }
+  const activeUser = state.role==='master' ? USERS.master : findUser(state.actingUserId);
+  html += '<div class="user-chip"><div class="avatar" style="background:'+avatarGradient(activeUser.name)+';">'+activeUser.initials+'</div><div><div class="name">'+activeUser.name+'</div><div class="role">'+state.role+'</div></div></div>';
+  actions.innerHTML = html;
+}
+
+function renderNotifPanel(){
+  const panel = document.getElementById('notifPanel');
+  if(state.role==='reviewer'){ panel.classList.add('hidden'); panel.innerHTML=''; return; }
+  const scopeIds = state.role==='master' ? COMPLIANCES.map(c=>c.id) : COMPLIANCES.filter(c=>c.ownerId===state.actingUserId).map(c=>c.id);
+  const all = COMPLIANCES.filter(c=>scopeIds.includes(c.id) && computeStatus(c.nextDue)!=='compliant')
+    .sort((a,b)=> new Date(a.nextDue)-new Date(b.nextDue));
+  const overdue = all.filter(c=>computeStatus(c.nextDue)==='overdue');
+  const due = all.filter(c=>computeStatus(c.nextDue)==='due');
+
+  function row(c){
+    const st = computeStatus(c.nextDue);
+    const plant = PLANTS.find(p=>p.id===c.plantId);
+    const agency = AGENCIES.find(a=>a.id===c.agencyId);
+    return '<div class="notif-item" data-notif-id="'+c.id+'">'
+      +'<div class="n-icon '+st+'">'+icon(st==='overdue'?'alertTriangle':'clock',15)+'</div>'
+      +'<div><div class="n-title">'+c.name+'</div><div class="n-sub">'+plant.name+' &middot; '+agency.name+' &middot; Due '+fmtDate(c.nextDue)+'</div></div>'
+      +'</div>';
+  }
+  function section(label, tone, items){
+    if(items.length===0) return '';
+    return '<div class="notif-section"><div class="notif-section-label '+tone+'">'+label+' &middot; '+items.length+'</div>'+items.map(row).join('')+'</div>';
+  }
+  const body = section('Overdue','overdue',overdue) + section('Due this month','due',due)
+    || '<div style="padding:26px 18px; text-align:center; color:var(--ink-faint); font-size:13px;">All caught up — nothing overdue or due this month.</div>';
+  panel.innerHTML = '<div class="notif-panel-head"><h4>Notifications</h4><span>'+all.length+' need attention</span></div><div class="notif-list">'+body+'</div>';
+}
+
+/* ================= BREADCRUMB ================= */
+function renderBreadcrumb(rootLabel){
+  const plant = PLANTS.find(p=>p.id===state.plantId);
+  const agency = AGENCIES.find(a=>a.id===state.agencyId);
+  let parts = ['<span class="crumb'+(state.plantId?' clickable':' current')+'" data-crumb="root">'+rootLabel+'</span>'];
+  if(plant){
+    parts.push('<span>'+icon('chevronRight',13)+'</span>');
+    parts.push('<span class="crumb'+(state.agencyId?' clickable':' current')+'" data-crumb="plant">'+plant.name+'</span>');
+  }
+  if(agency){
+    parts.push('<span>'+icon('chevronRight',13)+'</span>');
+    parts.push('<span class="crumb current">'+agency.name+'</span>');
+  }
+  return '<div class="breadcrumb">'+parts.join('')+'</div>';
+}
+
+/* ================= MASTER VIEW ================= */
+function renderMasterView(){
+  if(state.complianceId) return renderComplianceDetail('master');
+  if(!state.plantId) return renderPlantLevel('master', 'All plants', 'Compliance Command Center', 'A single view across every plant, agency and filing obligation in the organization.');
+  if(!state.agencyId) return renderAgencyLevel('master');
+  return renderComplianceLevel('master');
+}
+
+/* ================= OWNER VIEW ================= */
+function renderOwnerView(){
+  if(state.complianceId) return renderComplianceDetail('owner');
+  if(!state.plantId) return renderPlantLevel('owner', 'All plants', 'My compliance queue', 'Every plant is listed below — only plants where you own at least one compliance are open to you.');
+  if(!state.agencyId) return renderAgencyLevel('owner');
+  return renderComplianceLevel('owner');
+}
+
+/* ================= REVIEWER VIEW ================= */
+function renderReviewerView(){
+  if(state.complianceId) return renderComplianceDetail('reviewer');
+  if(!state.plantId) return renderPlantLevel('reviewer', 'All plants', 'Compliance review', 'Every plant is listed below — only plants with a compliance assigned to you for review are open. Access is read-only.');
+  if(!state.agencyId) return renderAgencyLevel('reviewer');
+  return renderComplianceLevel('reviewer');
+}
+
+/* ================= SHARED LEVEL RENDERERS ================= */
+function renderPlantLevel(role, crumbRoot, heading, desc){
+  const plants = PLANTS;
+  const eyebrow = role==='master' ? 'MasterView' : role==='owner' ? 'Owner workspace' : 'Reviewer workspace';
+  const body = '<div class="grid">'+ plants.map(p=>{
+      const accessible = isPlantAccessible(p.id);
+      if(!accessible){
+        return '<div class="entity-card locked" aria-disabled="true">'
+          +'<div class="icon-wrap">'+icon('building',20)+'</div>'
+          +'<div><h3>'+p.name+'</h3><div class="meta">'+p.location+'</div><div class="code">'+p.code+'</div></div>'
+          +'<div class="lock-note">'+icon('lock',13)+' Not assigned to you</div>'
+          +'</div>';
+      }
+      const stats = plantStats(p.id);
+      return '<button class="entity-card" data-plant-id="'+p.id+'">'
+        +'<div class="icon-wrap">'+icon('building',20)+'</div>'
+        +'<div><h3>'+p.name+'</h3><div class="meta">'+p.location+'</div><div class="code">'+p.code+'</div></div>'
+        +'<div class="stat-row">'
+          +(stats.overdue? '<div class="mini-stat"><span class="dot overdue"></span>'+stats.overdue+' overdue</div>':'')
+          +(stats.due? '<div class="mini-stat"><span class="dot due"></span>'+stats.due+' due</div>':'')
+          +(stats.compliant? '<div class="mini-stat"><span class="dot compliant"></span>'+stats.compliant+' compliant</div>':'')
+        +'</div>'
+        +'<div class="chevron">'+icon('chevronRight',16)+'</div>'
+        +'</button>';
+    }).join('') +'</div>';
+  return '<div class="page-head"><span class="eyebrow">'+eyebrow+'</span><h1>'+heading+'</h1><p class="desc">'+desc+'</p></div>'
+    + renderBreadcrumb(crumbRoot) + body;
+}
+
+function renderAgencyLevel(role){
+  const plant = PLANTS.find(p=>p.id===state.plantId);
+  const agencies = AGENCIES.filter(a=>a.plantId===state.plantId);
+  const crumbRoot = 'All plants';
+  const body = '<div class="grid">'+ agencies.map(a=>{
+      const accessible = isAgencyAccessible(a.id);
+      if(!accessible){
+        return '<div class="entity-card locked" aria-disabled="true">'
+          +'<div class="icon-wrap">'+icon('folder',20)+'</div>'
+          +'<div><h3>'+a.name+'</h3><div class="meta">'+a.dept+' &middot; '+plant.name+'</div></div>'
+          +'<div class="lock-note">'+icon('lock',13)+' Not assigned to you</div>'
+          +'</div>';
+      }
+      const stats = agencyStats(a.id);
+      return '<button class="entity-card" data-agency-id="'+a.id+'">'
+        +'<div class="icon-wrap">'+icon('folder',20)+'</div>'
+        +'<div><h3>'+a.name+'</h3><div class="meta">'+a.dept+' &middot; '+plant.name+'</div></div>'
+        +'<div class="stat-row">'
+          +(stats.overdue? '<div class="mini-stat"><span class="dot overdue"></span>'+stats.overdue+' overdue</div>':'')
+          +(stats.due? '<div class="mini-stat"><span class="dot due"></span>'+stats.due+' due</div>':'')
+          +(stats.compliant? '<div class="mini-stat"><span class="dot compliant"></span>'+stats.compliant+' compliant</div>':'')
+        +'</div>'
+        +'<div class="chevron">'+icon('chevronRight',16)+'</div>'
+        +'</button>';
+    }).join('') + '</div>';
+  return '<div class="page-head"><span class="eyebrow">'+plant.code+'</span><h1>'+plant.name+'</h1><p class="desc">'+plant.location+' &middot; select an agency to view its compliances.</p></div>'
+    + renderBreadcrumb(crumbRoot) + body;
+}
+
+function renderComplianceLevel(role){
+  const plant = PLANTS.find(p=>p.id===state.plantId);
+  const agency = AGENCIES.find(a=>a.id===state.agencyId);
+  const crumbRoot = 'All plants';
+  let list = COMPLIANCES.filter(c=>c.plantId===state.plantId && c.agencyId===state.agencyId);
+  if(state.fy !== 'all') list = list.filter(c=>fyOf(c.nextDue)===state.fy);
+
+  const fyOptions = ['FY 2025-26','FY 2026-27','FY 2027-28'];
+  const filterHtml = '<div class="list-toolbar">'
+    +'<div class="fy-filter"><label>Financial year</label><select class="select" id="fySelect" style="width:auto;">'
+      +'<option value="all"'+(state.fy==='all'?' selected':'')+'>All years</option>'
+      + fyOptions.map(f=>'<option value="'+f+'"'+(state.fy===f?' selected':'')+'>'+f+'</option>').join('')
+    +'</select></div>'
+    +'<div class="result-count">'+list.length+' compliance'+(list.length!==1?'s':'')+'</div>'
+    +'</div>';
+
+  let rows;
+  if(list.length===0){
+    rows = emptyState('calendar','No compliances found', 'No compliances match this financial year filter for '+agency.name+'. Try switching the filter above.');
+  } else {
+    rows = list.sort((a,b)=> new Date(a.nextDue)-new Date(b.nextDue)).map(c=>{
+      const st = computeStatus(c.nextDue);
+      const owner = findUser(c.ownerId);
+      const reviewer = findUser(c.reviewerId);
+      const accessible = isComplianceAccessible(c.id);
+      const meta = '<div class="cr-main"><h4>'+c.name+'</h4><div class="cr-meta">'
+          +'<span>'+icon('user',12.5)+' Owner: '+owner.name+'</span>'
+          +'<span>'+icon('eye',12.5)+' Reviewer: '+reviewer.name+'</span>'
+          +'<span>'+icon('folder',12.5)+' '+c.department+'</span>'
+          +'<span class="mono">'+fyOf(c.nextDue)+'</span>'
+        +'</div></div>'
+        +'<div class="cr-due"><div class="label">Next due</div><div class="date">'+fmtDate(c.nextDue)+'</div></div>';
+      if(!accessible){
+        return '<div class="compliance-row locked" aria-disabled="true">'+meta
+          +'<div class="lock-note" style="border-top:none; padding-top:0; margin-top:0;">'+icon('lock',13)+' Not yours</div>'
+          +'</div>';
+      }
+      return '<div class="compliance-row '+st+'" data-compliance-id="'+c.id+'">'+meta
+        +'<div class="status-pill '+st+'"><span class="dot" style="background:currentColor;"></span>'+statusLabel(st)+'</div>'
+        +'</div>';
+    }).join('');
+  }
+  return '<div class="page-head"><span class="eyebrow">'+plant.name+'</span><h1>'+agency.name+'</h1><p class="desc">'+agency.dept+' compliances tracked under this agency.</p></div>'
+    + renderBreadcrumb(crumbRoot) + filterHtml + rows;
+}
+
+function emptyState(iconName, title, desc){
+  return '<div class="empty-state"><div class="icon-wrap">'+icon(iconName,22)+'</div><h3>'+title+'</h3><p>'+desc+'</p></div>';
+}
+
+/* ================= COMPLIANCE DETAIL ================= */
+function renderComplianceDetail(role){
+  const c = COMPLIANCES.find(x=>x.id===state.complianceId);
+  const plant = PLANTS.find(p=>p.id===c.plantId);
+  const agency = AGENCIES.find(a=>a.id===c.agencyId);
+  const owner = findUser(c.ownerId);
+  const reviewer = findUser(c.reviewerId);
+  const st = computeStatus(c.nextDue);
+  const crumbRoot = 'All plants';
+
+  const head = '<div class="detail-head">'
+    +'<div class="stamp '+st+'"><span>'+statusLabel(st)+'</span></div>'
+    +'<div class="info">'
+      + (role==='reviewer' ? '<div class="view-only-tag">'+icon('eye',12)+' View only</div>' : '')
+      +'<h2>'+c.name+'</h2>'
+      +'<div class="muted" style="font-size:13.5px;">'+plant.name+' &middot; '+agency.name+'</div>'
+      +'<div class="detail-grid">'
+        +dg('Owner', owner.name)+dg('Reviewer', reviewer.name)+dg('Department', c.department)
+        +dg('Frequency', 'Every '+c.freqNum+' '+c.freqUnit+(c.freqNum>1?'s':''))
+        +dg('Start date', fmtDate(c.startDate))+dg('Next due', fmtDate(c.nextDue), true)
+        +dg('Financial year', fyOf(c.nextDue))
+      +'</div>'
+      + (role==='master' ? '<div style="margin-top:16px;"><button class="btn btn-outline btn-sm" id="btnEditCompliance">'+icon('edit',14)+' Edit assignment</button></div>' : '')
+    +'</div>'
+  +'</div>';
+
+  const historyHtml = renderHistory(c);
+
+  let mainBody;
+  if(role==='owner'){
+    mainBody = '<div class="two-col">'
+      + renderFulfillmentForm(c)
+      + '<div class="panel"><h3>'+icon('fileText',16)+' Fulfillment history</h3>'+historyHtml+'</div>'
+    +'</div>';
+  } else {
+    mainBody = '<div class="panel"><h3>'+icon('fileText',16)+' Fulfillment history</h3>'+historyHtml+'</div>';
+  }
+
+  return '<div class="page-head"></div>'
+    + renderBreadcrumb(crumbRoot).replace('</div>', '<span>'+icon('chevronRight',13)+'</span><span class="crumb current">'+c.name+'</span></div>')
+    + head + mainBody;
+}
+function dg(k,v,mono){ return '<div class="dg-item"><div class="k">'+k+'</div><div class="v'+(mono?' mono':'')+'">'+v+'</div></div>'; }
+
+function renderHistory(c){
+  if(c.logs.length===0) return emptyState('clock','No fulfillment logged yet', 'Once the owner completes this compliance, the log will appear here.');
+  return c.logs.slice().reverse().map(l=>{
+    const by = findUser(l.by);
+    return '<div class="history-item"><div class="history-dot"></div><div class="h-date">'+fmtDate(l.date)+'</div>'
+      +'<div class="h-body"><div class="h-remarks">'+l.remarks+'</div><div class="h-by">Logged by '+by.name+'</div>'
+      + (l.files && l.files.length ? '<div class="h-files">'+l.files.map(f=>'<span class="file-chip">'+icon('paperclip',11)+f+'</span>').join('')+'</div>' : '')
+      +'</div></div>';
+  }).join('');
+}
+
+function renderFulfillmentForm(c){
+  const attachChips = state.tempAttachments.map((f,i)=>'<span class="attach-chip">'+icon('fileText',13)+f+'<button data-remove-attach="'+i+'">'+icon('x',12)+'</button></span>').join('');
+  return '<div class="panel">'
+    +'<h3>'+icon('checkCircle',16)+' Log fulfillment</h3>'
+    +'<div class="field"><label>Completion date</label><input class="input" type="date" id="fulfillDate" value="'+isoDate(TODAY)+'"/></div>'
+    +'<div class="field"><label>Remarks</label><textarea class="textarea" id="fulfillRemarks" placeholder="What was filed / renewed, and any reference number"></textarea></div>'
+    +'<div class="field"><label>Attachments</label><div class="attach-list">'+attachChips+'</div>'
+      +'<button class="btn btn-outline btn-sm" id="btnAttach" type="button">'+icon('upload',14)+' Attach file</button></div>'
+    +'<div class="field"><label>Reminders (days before due)</label><div class="reminder-chips">'
+      + c.reminders.map(r=>'<div class="reminder-chip"><b>'+r.label+'</b><input type="number" min="0" value="'+r.days+'" data-reminder="'+r.label+'"/> days</div>').join('')
+    +'</div><div class="hint">Defaults to the owner. Custom recipients can be layered in later.</div></div>'
+    +'<button class="btn btn-primary" id="btnMarkComplete" style="width:100%; justify-content:center;">'+icon('checkCircle',15)+' Mark as complete</button>'
+    +'</div>';
+}
+
+/* ================= TOAST ================= */
+function toast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className='toast';
+  el.innerHTML = icon('checkCircle',15)+'<span>'+msg+'</span>';
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='.25s'; setTimeout(()=>el.remove(),250); }, 2600);
+}
+
+/* ================= EVENT HANDLERS ================= */
+function attachHandlers(){
+  const root = document.getElementById('viewRoot');
+
+  root.querySelectorAll('[data-plant-id]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.plantId = el.dataset.plantId; state.agencyId=null; state.complianceId=null; render(); });
+  });
+  root.querySelectorAll('[data-agency-id]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.agencyId = el.dataset.agencyId; state.complianceId=null; render(); });
+  });
+  root.querySelectorAll('[data-compliance-id]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.complianceId = el.dataset.complianceId; state.tempAttachments=[]; render(); });
+  });
+  root.querySelectorAll('.crumb.clickable').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      if(el.dataset.crumb==='root'){ state.plantId=null; state.agencyId=null; }
+      else if(el.dataset.crumb==='plant'){ state.agencyId=null; }
+      state.complianceId=null;
+      render();
+    });
+  });
+  const fySelect = document.getElementById('fySelect');
+  if(fySelect) fySelect.addEventListener('change', e=>{ state.fy = e.target.value; render(); });
+
+  const markBtn = document.getElementById('btnMarkComplete');
+  if(markBtn) markBtn.addEventListener('click', ()=>{
+    const c = COMPLIANCES.find(x=>x.id===state.complianceId);
+    const date = document.getElementById('fulfillDate').value || isoDate(TODAY);
+    const remarks = document.getElementById('fulfillRemarks').value || 'Marked complete.';
+    c.reminders.forEach(r=>{
+      const input = document.querySelector('[data-reminder="'+r.label+'"]');
+      if(input) r.days = parseInt(input.value,10) || r.days;
+    });
+    c.logs.push({date, by:c.ownerId, remarks, files: state.tempAttachments.slice()});
+    c.nextDue = isoDate(addInterval(new Date(date), c.freqNum, c.freqUnit));
+    state.tempAttachments = [];
+    render();
+    toast('Compliance marked complete — next due date recalculated to '+fmtDate(c.nextDue));
+  });
+  const attachBtn = document.getElementById('btnAttach');
+  if(attachBtn) attachBtn.addEventListener('click', ()=>{
+    state.tempAttachments.push('supporting_doc_'+(state.tempAttachments.length+1)+'.pdf');
+    render();
+  });
+  root.querySelectorAll('[data-remove-attach]').forEach(el=>{
+    el.addEventListener('click', (e)=>{ e.stopPropagation(); state.tempAttachments.splice(parseInt(el.dataset.removeAttach,10),1); render(); });
+  });
+
+  const editBtn = document.getElementById('btnEditCompliance');
+  if(editBtn) editBtn.addEventListener('click', ()=> openComplianceModal(state.complianceId) );
+
+  // Navbar-level buttons (re-query each render since navbar innerHTML resets)
+  const newAgencyBtn = document.getElementById('btnNewAgency');
+  if(newAgencyBtn) newAgencyBtn.addEventListener('click', openAgencyModal);
+  const newComplianceBtn = document.getElementById('btnNewCompliance');
+  if(newComplianceBtn) newComplianceBtn.addEventListener('click', ()=>openComplianceModal(null));
+  const notifBtn = document.getElementById('btnNotif');
+  if(notifBtn) notifBtn.addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('notifPanel').classList.toggle('hidden'); });
+}
+
+document.addEventListener('click', (e)=>{
+  const panel = document.getElementById('notifPanel');
+  const notifItem = e.target.closest('.notif-item');
+  if(notifItem){
+    const c = COMPLIANCES.find(x=>x.id===notifItem.dataset.notifId);
+    state.plantId = c.plantId; state.agencyId = c.agencyId; state.complianceId=null;
+    panel.classList.add('hidden');
+    render();
+    setTimeout(()=>{
+      const row = document.querySelector('[data-compliance-id="'+c.id+'"]');
+      if(row){ row.scrollIntoView({block:'center'}); row.classList.add('flash'); }
+    },50);
+    return;
+  }
+  if(!e.target.closest('#btnNotif') && !e.target.closest('#notifPanel')){
+    panel.classList.add('hidden');
+  }
+});
+
+/* ================= ROLE SWITCH / RESET ================= */
+document.getElementById('roleSwitch').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-role]');
+  if(!btn) return;
+  state.role = btn.dataset.role;
+  state.actingUserId = state.role==='owner' ? USERS.owners[0].id : state.role==='reviewer' ? USERS.reviewers[0].id : null;
+  resetNav();
+  render();
+});
+document.getElementById('actingAsSelect').addEventListener('change', (e)=>{
+  state.actingUserId = e.target.value; resetNav(); render();
+});
+document.getElementById('resetDemo').addEventListener('click', ()=>{
+  state.role='master'; state.actingUserId=USERS.owners[0].id; resetNav(); render();
+  toast('Demo reset to MasterView');
+});
+
+/* ================= MODALS: CREATE AGENCY ================= */
+function openAgencyModal(){
+  const sel = document.getElementById('agencyPlantSelect');
+  sel.innerHTML = PLANTS.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('');
+  document.getElementById('agencyNameInput').value='';
+  document.getElementById('agencyDescInput').value='';
+  document.getElementById('agencyModalOverlay').classList.remove('hidden');
+}
+document.getElementById('closeAgencyModal').addEventListener('click', ()=>document.getElementById('agencyModalOverlay').classList.add('hidden'));
+document.getElementById('cancelAgencyModal').addEventListener('click', ()=>document.getElementById('agencyModalOverlay').classList.add('hidden'));
+document.getElementById('submitAgencyModal').addEventListener('click', ()=>{
+  const plantId = document.getElementById('agencyPlantSelect').value;
+  const name = document.getElementById('agencyNameInput').value.trim();
+  if(!name){ toast('Enter an agency name to continue'); return; }
+  const id = plantId+'-custom-'+Date.now();
+  AGENCIES.push({id, plantId, type:'custom', name, dept:'General'});
+  document.getElementById('agencyModalOverlay').classList.add('hidden');
+  toast('Agency "'+name+'" created');
+  render();
+});
+
+/* ================= MODALS: CREATE / EDIT COMPLIANCE ================= */
+function refreshComplianceAgencyOptions(){
+  const plantId = document.getElementById('cPlantSelect').value;
+  const agencySel = document.getElementById('cAgencySelect');
+  agencySel.innerHTML = AGENCIES.filter(a=>a.plantId===plantId).map(a=>'<option value="'+a.id+'">'+a.name+'</option>').join('');
+}
+function updateDuePreview(){
+  const start = document.getElementById('cStartInput').value;
+  const num = parseInt(document.getElementById('cFreqNumInput').value,10) || 1;
+  const unit = document.getElementById('cFreqUnitInput').value;
+  if(!start){ document.getElementById('cDuePreview').textContent='—'; return; }
+  const due = addInterval(new Date(start), num, unit);
+  document.getElementById('cDuePreview').textContent = fmtDate(isoDate(due));
+}
+function openComplianceModal(editId){
+  state.editingComplianceId = editId;
+  document.getElementById('complianceModalTitle').textContent = editId ? 'Edit compliance' : 'Create compliance';
+  document.getElementById('submitComplianceModal').textContent = editId ? 'Save changes' : 'Create compliance';
+  document.getElementById('cPlantSelect').innerHTML = PLANTS.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('');
+  document.getElementById('cOwnerSelect').innerHTML = USERS.owners.map(u=>'<option value="'+u.id+'">'+u.name+'</option>').join('');
+  document.getElementById('cReviewerSelect').innerHTML = USERS.reviewers.map(u=>'<option value="'+u.id+'">'+u.name+'</option>').join('');
+
+  if(editId){
+    const c = COMPLIANCES.find(x=>x.id===editId);
+    document.getElementById('cPlantSelect').value = c.plantId;
+    refreshComplianceAgencyOptions();
+    document.getElementById('cAgencySelect').value = c.agencyId;
+    document.getElementById('cNameInput').value = c.name;
+    document.getElementById('cOwnerSelect').value = c.ownerId;
+    document.getElementById('cReviewerSelect').value = c.reviewerId;
+    document.getElementById('cDeptSelect').value = c.department;
+    document.getElementById('cStartInput').value = c.startDate;
+    document.getElementById('cFreqNumInput').value = c.freqNum;
+    document.getElementById('cFreqUnitInput').value = c.freqUnit;
+  } else {
+    refreshComplianceAgencyOptions();
+    document.getElementById('cNameInput').value='';
+    document.getElementById('cDeptSelect').value='Environment';
+    document.getElementById('cStartInput').value = isoDate(TODAY);
+    document.getElementById('cFreqNumInput').value = 1;
+    document.getElementById('cFreqUnitInput').value = 'month';
+  }
+  updateDuePreview();
+  document.getElementById('complianceModalOverlay').classList.remove('hidden');
+}
+document.getElementById('cPlantSelect').addEventListener('change', refreshComplianceAgencyOptions);
+['cStartInput','cFreqNumInput','cFreqUnitInput'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', updateDuePreview);
+  document.getElementById(id).addEventListener('change', updateDuePreview);
+});
+document.getElementById('closeComplianceModal').addEventListener('click', ()=>document.getElementById('complianceModalOverlay').classList.add('hidden'));
+document.getElementById('cancelComplianceModal').addEventListener('click', ()=>document.getElementById('complianceModalOverlay').classList.add('hidden'));
+document.getElementById('submitComplianceModal').addEventListener('click', ()=>{
+  const name = document.getElementById('cNameInput').value.trim();
+  const start = document.getElementById('cStartInput').value;
+  if(!name || !start){ toast('Fill in the compliance name and start date'); return; }
+  const plantId = document.getElementById('cPlantSelect').value;
+  const agencyId = document.getElementById('cAgencySelect').value;
+  const ownerId = document.getElementById('cOwnerSelect').value;
+  const reviewerId = document.getElementById('cReviewerSelect').value;
+  const dept = document.getElementById('cDeptSelect').value;
+  const freqNum = parseInt(document.getElementById('cFreqNumInput').value,10) || 1;
+  const freqUnit = document.getElementById('cFreqUnitInput').value;
+  const nextDue = isoDate(addInterval(new Date(start), freqNum, freqUnit));
+
+  if(state.editingComplianceId){
+    const c = COMPLIANCES.find(x=>x.id===state.editingComplianceId);
+    Object.assign(c, {plantId, agencyId, name, ownerId, reviewerId, department:dept, startDate:start, freqNum, freqUnit, nextDue});
+    toast('Compliance updated');
+  } else {
+    COMPLIANCES.push({
+      id:'c-custom-'+Date.now(), plantId, agencyId, name, ownerId, reviewerId, department:dept,
+      startDate:start, freqNum, freqUnit, nextDue,
+      reminders:[{label:'R1',days:30},{label:'R2',days:15},{label:'R3',days:7},{label:'R4',days:1}], logs:[]
+    });
+    toast('Compliance "'+name+'" created');
+  }
+  document.getElementById('complianceModalOverlay').classList.add('hidden');
+  render();
+});
+
+/* ================= INIT ================= */
+render();
+</script>
+</body>
+</html>

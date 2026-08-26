@@ -1,0 +1,16 @@
+using System;
+using System.Web.UI;
+using ComplianceV2._2.App_Code;
+
+namespace ComplianceV2._2
+{
+    public partial class MailConfig : Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            var sessionId = SessionCookie.Resolve(Request);
+            var s = SessionStore.Validate(sessionId);
+            if (s == null || s.Role != "master") Response.Redirect("Default.aspx");
+        }
+    }
+}

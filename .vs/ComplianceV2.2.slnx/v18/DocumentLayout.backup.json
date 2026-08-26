@@ -1,0 +1,70 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\25028050\\Downloads\\ComplianceLegal\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1D222B0C-165A-4DB3-95AB-45E2EAFE05E8}|ComplianceV2.2\\ComplianceV2.2.csproj|c:\\users\\25028050\\downloads\\compliancelegal\\compliancev2.2\\default.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{1D222B0C-165A-4DB3-95AB-45E2EAFE05E8}|ComplianceV2.2\\ComplianceV2.2.csproj|solutionrelative:compliancev2.2\\default.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D222B0C-165A-4DB3-95AB-45E2EAFE05E8}|ComplianceV2.2\\ComplianceV2.2.csproj|C:\\Users\\25028050\\Downloads\\ComplianceLegal\\compliancev2.2\\scripts\\common.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{1D222B0C-165A-4DB3-95AB-45E2EAFE05E8}|ComplianceV2.2\\ComplianceV2.2.csproj|solutionrelative:compliancev2.2\\scripts\\common.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D222B0C-165A-4DB3-95AB-45E2EAFE05E8}|ComplianceV2.2\\ComplianceV2.2.csproj|C:\\Users\\25028050\\Downloads\\ComplianceLegal\\compliancev2.2\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{1D222B0C-165A-4DB3-95AB-45E2EAFE05E8}|ComplianceV2.2\\ComplianceV2.2.csproj|solutionrelative:compliancev2.2\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "common.js",
+              "DocumentMoniker": "C:\\Users\\25028050\\Downloads\\ComplianceLegal\\ComplianceV2.2\\Scripts\\common.js",
+              "RelativeDocumentMoniker": "ComplianceV2.2\\Scripts\\common.js",
+              "ToolTip": "C:\\Users\\25028050\\Downloads\\ComplianceLegal\\ComplianceV2.2\\Scripts\\common.js",
+              "RelativeToolTip": "ComplianceV2.2\\Scripts\\common.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-07-30T07:25:40.451Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Default.aspx",
+              "DocumentMoniker": "C:\\Users\\25028050\\Downloads\\ComplianceLegal\\ComplianceV2.2\\Default.aspx",
+              "RelativeDocumentMoniker": "ComplianceV2.2\\Default.aspx",
+              "ToolTip": "C:\\Users\\25028050\\Downloads\\ComplianceLegal\\ComplianceV2.2\\Default.aspx",
+              "RelativeToolTip": "ComplianceV2.2\\Default.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2026-07-30T07:16:57.47Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\Users\\25028050\\Downloads\\ComplianceLegal\\ComplianceV2.2\\Web.config",
+              "RelativeDocumentMoniker": "ComplianceV2.2\\Web.config",
+              "ToolTip": "C:\\Users\\25028050\\Downloads\\ComplianceLegal\\ComplianceV2.2\\Web.config",
+              "RelativeToolTip": "ComplianceV2.2\\Web.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-07-30T07:03:56.396Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

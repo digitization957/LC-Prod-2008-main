@@ -307,6 +307,9 @@
       '<div class="field"><label>Projected next due date</label><div class="date-fy-row"><div class="value">24-08-2026</div><span class="fy-chip">F27</span></div></div>' +
       '<div class="field" data-hl="fldremarks"><label>Remarks</label><textarea rows="2" readonly>Filed via portal, ref #4521</textarea></div>' +
       '<div class="field" data-hl="fldattach"><label>Attachments</label><span class="attach-chip">' + icon("clip", 12) + "receipt.pdf</span></div>" +
+      '<div class="field" data-hl="fldreminders"><label>Reminders (days before due)</label>' +
+      '<div class="field-row" style="margin-bottom:8px"><div><label style="font-weight:400">R1 (days before)</label><input type="number" value="30" readonly /></div><div><label style="font-weight:400">R2 (days before)</label><input type="number" value="15" readonly /></div></div>' +
+      '<div class="field-row"><div><label style="font-weight:400">R3 (days before)</label><input type="number" value="7" readonly /></div><div><label style="font-weight:400">R4 (days before)</label><input type="number" value="1" readonly /></div></div></div>' +
       '<button type="button" class="btn btn-primary" style="width:100%;justify-content:center" data-hl="markdone">' + icon("check", 16) + " Mark as complete</button></div>" : "";
     var history = '<div class="panel panel-history"><h3>' + icon("clip", 16) + " Fulfilment history</h3><div class=\"history-item\"><div class=\"dot\"></div><div class=\"hdate\">23-07-2026</div><div class=\"hbody\">Filed via portal, ref #4521<div class=\"hby\">Logged by Vikram Shah</div></div></div></div>";
     var body = fulfil ? '<div class="detail-body">' + fulfil + history + "</div>" : '<div class="detail-body single">' + history + "</div>";
@@ -403,6 +406,7 @@
         { mock: function () { return frame(realNavbar(), bodyDetail()); }, hl: "flddate", title: "Step 4 — Fill the fulfilment form", desc: "Open your compliance — the fulfilment form appears below the history. Completion date defaults to today (with its financial-year chip), and the projected next due date auto-calculates from the frequency, so you know the next cycle before you submit." },
         { mock: function () { return frame(realNavbar(), bodyDetail()); }, hl: "fldremarks", title: "Add remarks", desc: "Add remarks — what was filed or renewed, plus any reference number. Up to 250 characters, with a live counter." },
         { mock: function () { return frame(realNavbar(), bodyDetail()); }, hl: "fldattach", title: "Attach proof", desc: "Attach up to 3 files (PDF, JPG, PNG or DOC) as proof of filing — each upload is scanned and encrypted automatically." },
+        { mock: function () { return frame(realNavbar(), bodyDetail()); }, hl: "fldreminders", title: "Field: Reminders (days before due)", desc: "Four automatic reminder emails — R1, R2, R3, R4 — each fires this many days before the next due date. Defaults are 30/15/7/1 days and go to you as owner; change the numbers if this compliance needs a different cadence." },
         { mock: function () { return frame(realNavbar(), bodyDetail()); }, hl: "markdone", title: "Submit", desc: "Hit Mark as complete. The compliance status and due date update instantly, and your reviewer is notified by mail." },
         { mock: function () { return frame(realNavbar(), bodyDetailRevert()); }, hl: "revertbtn", title: "Revert a mistaken fulfilment", desc: "Filled it wrong? In the fulfilment history, your latest log shows a <b>Revert this fulfilment</b> button for 7 days — confirm, give a reason, and it's undone. The due date resets and the reviewer gets an email with what was originally filed." },
         { mock: function () { return frame(realNavbar(), bodySchedule()); }, hl: "overduecard", title: "Your Schedule", desc: "The Schedule page is yours alone — everything overdue at the top, everything due soon below (with a date filter). Click a card to jump straight to it and act." }
@@ -472,8 +476,13 @@
       var container = mock ? mock.closest(".sop-stage") : null;
       var el = mock ? mock.querySelector('[data-hl="' + hl + '"]') : null;
       if (!el || !container) { $ring.hide(); return; }
-      var sr = container.getBoundingClientRect(), er = el.getBoundingClientRect(), pad = 6;
-      $ring.css({ display: "block", left: (er.left - sr.left - pad) + "px", top: (er.top - sr.top - pad) + "px", width: (er.width + pad * 2) + "px", height: (er.height + pad * 2) + "px" });
+      // The mock can be taller/wider than the stage (long Create-compliance modal, narrow viewport) -
+      // scroll the highlighted field into view first, then measure, so the ring is never stranded off-screen.
+      el.scrollIntoView({ block: "center", inline: "center" });
+      requestAnimationFrame(function () {
+        var sr = container.getBoundingClientRect(), er = el.getBoundingClientRect(), pad = 6;
+        $ring.css({ display: "block", left: (er.left - sr.left - pad + container.scrollLeft) + "px", top: (er.top - sr.top - pad + container.scrollTop) + "px", width: (er.width + pad * 2) + "px", height: (er.height + pad * 2) + "px" });
+      });
     });
   }
 
@@ -520,9 +529,13 @@
     else if (e.key === "ArrowLeft") sopGo(sopIdx - 1);
   });
   $(window).on("resize", function () { if ($(".sop-overlay").length) positionRing(sopList[sopIdx].hl); });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { if ($(".sop-overlay").length) positionRing(sopList[sopIdx].hl); });
+  }
 
   $(function () {
     api("ValidateSession", { sessionId: sessionId }).then(function (v) {
+      if (!v.valid) { goToSso(); return $.Deferred().promise(); }
       role = v.role || "owner";
       return api("GetTrainingStatus", { sessionId: sessionId });
     }).then(function (t) {

@@ -888,7 +888,7 @@
       case "go-agency": goAgency(id); break;
       case "go-compliance": goCompliance(id); break;
       case "sign-out": signOut(); break;
-      case "go-training": window.location.href = "Training.aspx"; break;
+      case "go-training": window.location.href = "Training.aspx?sessionId=" + encodeURIComponent(state.session.sessionId); break;
       case "toggle-user-menu":
         state.userMenuOpen = !state.userMenuOpen;
         render();

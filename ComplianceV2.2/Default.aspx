@@ -13,6 +13,6 @@
     <div id="app"></div>
     <script src="Scripts/jquery-3.7.0.min.js"></script>
     <script src="Scripts/common.js?v=6"></script>
-    <script src="Scripts/app.js?v=26"></script>
+    <script src="Scripts/app.js?v=27"></script>
 </body>
 </html>

@@ -563,8 +563,8 @@
   // ---------- Config menu (master-only) ----------
   function configMenuHtml() {
     return '<div class="create-menu">' +
-      '<a class="create-menu-item" href="MailConfig.aspx">' + icon("mail", 15) + " Mail config</a>" +
-      '<a class="create-menu-item" href="AgencyLogoConfig.aspx">' + icon("folder", 15) + " Agency logo config</a>" +
+      '<a class="create-menu-item" href="MailConfig.aspx?sessionId=' + encodeURIComponent(state.session.sessionId) + '">' + icon("mail", 15) + " Mail config</a>" +
+      '<a class="create-menu-item" href="AgencyLogoConfig.aspx?sessionId=' + encodeURIComponent(state.session.sessionId) + '">' + icon("folder", 15) + " Agency logo config</a>" +
       "</div>";
   }
 

@@ -81,7 +81,7 @@
         : DOWNLOAD_ZIP_URL + "?logId=" + l.logId;
       var filesLink = l.attachments.length ? filesChipHtml(l.logId,
         icon("clip", 15) + "Files (" + l.attachments.length + ")",
-        "Preview.aspx?logId=" + l.logId,
+        "Preview.aspx?logId=" + l.logId + "&sessionId=" + encodeURIComponent(sessionId),
         downloadUrl, single ? "Download file" : "Download zip") : "";
       return '<div class="history-item"><div class="dot"></div><div class="hdate">' + esc(fmtDate(l.actionDate)) + '</div><div class="hbody">' + esc(l.remarks || "") +
         '<div class="hby">Logged by ' + esc(l.doneBy) + "</div>" + (filesLink ? "<div>" + filesLink + "</div>" : "") + "</div></div>";

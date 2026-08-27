@@ -434,7 +434,7 @@
         : DOWNLOAD_ZIP_URL + "?logId=" + l.logId;
       var filesLink = l.attachments.length ? filesChipHtml(l.logId,
         icon("clip", 12) + "Files (" + l.attachments.length + ")",
-        "Preview.aspx?logId=" + l.logId,
+        "Preview.aspx?logId=" + l.logId + "&sessionId=" + encodeURIComponent(state.session.sessionId),
         downloadUrl, single ? "Download file" : "Download zip") : "";
       var revertBtn = l.canRevert ? '<button type="button" class="btn btn-outline btn-sm" data-action="open-revert" data-log="' + l.logId + '">Revert this fulfilment</button>' : "";
       var actionRow = (filesLink || revertBtn) ? '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px">' + (filesLink || "<span></span>") + revertBtn + "</div>" : "";
